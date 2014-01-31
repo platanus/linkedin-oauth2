@@ -7,8 +7,13 @@ module LinkedIn
 
       def add_share(share)
         path = "/people/~/shares"
-        body = {share: {visibility: {code: "anyone"}, comment: share[:comment], 
-          :'submitted-url' => share[:'submitted-url'], :'submitted-image-url' => share[:'submitted-image-url'] }}
+        share_h = { 
+          visibility: { code: "anyone" }, 
+          comment: share[:comment]
+        }
+        share_h.merge!(:'submitted-url' => share[:'submitted-url']) if share[:'submitted-url']
+        share_h.merge!(:'submitted-image-url' => share[:'submitted-image-url']) if share[:'submitted-image-url']
+        body = { share: share_h }
         post(path, body: hash_to_xml(body), headers: {"Content-Type" => "application/xml"})
       end
 
